@@ -1,0 +1,30 @@
+section {
+    width: 30%;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+.section-heading{
+    text-align: center;
+}
+
+.container{
+    border: 1px solid black;    
+    padding: 20px;
+}
+
+.input-container{
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+#button-choose {
+    width: 100%;
+    background-color: #204051;
+    color: white;
+    padding: 5px;
+    border: none;
+    border-radius: 5%;
+    font-size: 16px;
+    margin: 15px 0 0;
+}
