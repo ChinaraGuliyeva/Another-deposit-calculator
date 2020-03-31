@@ -17,53 +17,58 @@
 Мы предполагаем ежемесячную капитализацию по вкладу. Пополнение происходит после начисления процентов. Последнее пополнение по окончании срока не производится. 
 При расчете конечной суммы можно использовать код функции из предыдущего проекта.*/
 
-
 import {deposits} from './data.js';
 
-let initialSum= document.getElementById('initial-sum-input');
-let monthlyRefill= document.getElementById('monthly');
-let depositTime= document.getElementById('time');
-let depositCurrency= document.getElementById('currency');
-let button = document.getElementById('button-choose');
+class Application {
+    constructor(){
+        this.button = document.getElementById('button-choose');
+        this.button.addEventListener('click', this.getData);    
+    }      
+    getData = () => {
+        let initialSum= +document.getElementById('initial-sum-input').value;
+        let monthlyRefill= +document.getElementById('monthly').value;
+        let depositTime= +document.getElementById('time').value;
+        let depositCurrency= +document.getElementById('currency').value;
 
-console.log(initialSum.value);
-console.log(monthlyRefill.value);
-console.log(depositTime.value);
-console.log(depositCurrency.value);
+        let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
+        ///clientData.check();
+        console.log(clientData);
+    }
+    
+}
 
-/* must be moved to class
-
-button.addEventListener('click', check);
-
-function check() { 
-    }*/
-
-//Maybe it should take arguments from inputs 
 class Deposit {
     constructor(initial, monthly, time, currency){
-        this.initial = initial;
-        this.monthly = monthly;
-        this.time = time;
-        this.currency = currency;
+        this.initial=initial; 
+        this.monthly=monthly; 
+        this.time=time;
+        this.currency=currency;
+    }
+    check =() =>{
+        if (this.initial>=0 && this.monthly>0 && Number.isInteger(+this.time) && this.time>0 &&(this.currency=='RUB' || this.currency=='USD')){                 
+            console.log('ok')
+        }
+        else {
+            alert('Ошибка!');
+        }
     }
 }
 
-//Maybe it should be taken from deposits
 class BankProduct {
-    constructor(bank, invest, rate){
-        this.bank = bank;
-        this.invest = invest;
-        this.rate = rate;
-        total = 0;
-        //add formula for total
+    getBankArray =()=> {
+        let banks = [];
+        for (let i=0; i<deposits.length; i++){
+            banks.push(deposits[i]);
+        }
+        return banks;
     }
 }
 
 class Calculator{
-    //initializes by BankProduct array (deposits array) and calculates the best deposit
-    //maybe should take value from data.js and inputs
+    
+    //initializes by BankProduct array (deposits array) and calculates the best deposit 
 }
 
-class Application {
-    //hadles button onClick. Looks like the simplest task
-}
+let iii= new Application;
+iii.getData();
+ 
