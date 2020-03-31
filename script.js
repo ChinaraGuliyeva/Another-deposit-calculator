@@ -28,10 +28,10 @@ class Application {
         let initialSum= +document.getElementById('initial-sum-input').value;
         let monthlyRefill= +document.getElementById('monthly').value;
         let depositTime= +document.getElementById('time').value;
-        let depositCurrency= +document.getElementById('currency').value;
-
+        let depositCurrency= document.getElementById('currency').value;
         let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
-        ///clientData.check();
+
+        clientData.check();
         console.log(clientData);
     }
     
@@ -46,6 +46,7 @@ class Deposit {
     }
     check =() =>{
         if (this.initial>=0 && this.monthly>0 && Number.isInteger(+this.time) && this.time>0 &&(this.currency=='RUB' || this.currency=='USD')){                 
+            //new calculator?
             console.log('ok')
         }
         else {
@@ -55,20 +56,49 @@ class Deposit {
 }
 
 class BankProduct {
+    constructor(initial, monthly, time, currency){
+        this.initial=initial; 
+        this.monthly=monthly; 
+        this.time=time;
+        this.currency=currency;
+    }
     getBankArray =()=> {
         let banks = [];
         for (let i=0; i<deposits.length; i++){
             banks.push(deposits[i]);
-        }
-        return banks;
+        }      
+       return banks;
     }
+    
 }
 
 class Calculator{
-    
-    //initializes by BankProduct array (deposits array) and calculates the best deposit 
+    getDataFromClient = (initialSum, monthlyRefill, depositTime, depositCurrency) => {
+        initialSum= +document.getElementById('initial-sum-input').value;
+        monthlyRefill= +document.getElementById('monthly').value;
+        depositTime= +document.getElementById('time').value;
+        depositCurrency= document.getElementById('currency').value;
+        let bankProduct = new BankProduct();
+        let newArray = bankProduct.getBankArray().concat();
+        console.log(depositCurrency);
+        function currencyFilter(depositCurrency, newArray) {
+            let currencyArray = [];
+            newArray.forEach(element => { 
+                //console.log(element.currency);
+                console.log(depositCurrency);
+                if(element.currency == depositCurrency)
+                    {
+                    currencyArray.push(element);
+                }
+            }                
+        );
+            console.log(currencyArray);  
+        }
+        
+        currencyFilter(depositCurrency, newArray);
+}
 }
 
-let iii= new Application;
-iii.getData();
- 
+let ii = new Application();
+let ff = new Calculator();
+ff.getDataFromClient();
