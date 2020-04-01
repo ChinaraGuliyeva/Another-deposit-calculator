@@ -11,6 +11,7 @@ class Application {
         let depositTime = +document.getElementById('time').value;
         let depositCurrency = document.getElementById('currency').value;
         let resultBox=document.getElementById('result');
+        let table=document.getElementById('resultTable');
         let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
 
         clientData.check();
@@ -22,9 +23,18 @@ class Application {
             if(result[0]==undefined) {
                 resultBox.innerHTML="<p>Нет подходящих вариантов</p>";
             }
-            else if(result[0]!= undefined){
-               
 
+            if(result[0]!= undefined){
+                let rows = []; 
+                result.forEach(element => rows.push("<tr><td>" + element.bankName + "</td><td>" + element.investName + "</td><td>" +
+                element.incomeType + "</td><td>" + element.finalSum + "</td></tr>"))
+                table.style.display = "block";   
+                let fullRows = "";             
+                for (let i=0; i<rows.length; i++) {
+                    fullRows+=rows[i];
+                }                
+                table.innerHTML="<tr class='head'><th>Название банка</th><th>Вклад</th><th>Процент</th><th>Итоговая сумма</th></tr>" 
+                + fullRows;s
             }
         }
         drawTable(result);
