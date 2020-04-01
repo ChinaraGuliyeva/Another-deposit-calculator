@@ -131,7 +131,28 @@ class Calculator {
         }
         let secondFiltered = canRefill(monthlyRefill, firstFiltered);
         console.log(secondFiltered);
+
+        function minMaxamountFilter(initialSum, array){               
+            let result = array.filter(element => element.sumMin < initialSum);
+            let result2 = [];
+            result.forEach(element => {
+                if(element.sumMax==null){
+                    result2.push(element);
+                }
+                else if(element.sumMax > initialSum){
+                    result2.push(element);
+                }
+                
+            }
+                )
+            return result2;
+        }
+
+        let thirdFiltered = minMaxamountFilter(initialSum, secondFiltered);
+        console.log(thirdFiltered);  
+        
     }
+        
 }
 
 let application = new Application();
