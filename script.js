@@ -94,14 +94,16 @@ class Calculator {
         monthlyRefill = +document.getElementById('monthly').value;
         depositTime = +document.getElementById('time').value;
         depositCurrency = document.getElementById('currency').value;
+
         let bankProduct = new BankProduct();
         let newArray = bankProduct.getBankArray().concat();
         console.log(depositCurrency);
+
         function currencyFilter(depositCurrency, newArray) {
             let currencyArray = [];
             newArray.forEach(element => {
                 //console.log(element.currency);
-                console.log(depositCurrency);
+                //console.log(depositCurrency);
                 if (element.currency == depositCurrency) {
                     currencyArray.push(element);
                 }
@@ -110,10 +112,25 @@ class Calculator {
             console.log(currencyArray);
             return currencyArray;
         }
-        currencyFilter(depositCurrency, newArray);
-        function canRefill(monthlyRefill, array){
-            console.log(array);
+
+        let firstFiltered = currencyFilter(depositCurrency, newArray);
+        console.log(firstFiltered);
+
+        function canRefill(monthlyRefill, array) {
+            let resultArray = [];
+
+            for (let i = 0; i < array.length; i++) {
+                if (monthlyRefill == 0 && array[i].canDeposit == false) {
+                    resultArray.push(array[i]);
+                }
+                else if (monthlyRefill > 0 && array[i].canDeposit == true) {
+                    resultArray.push(array[i]);
+                }
+            }
+            return resultArray;
         }
+        let secondFiltered = canRefill(monthlyRefill, firstFiltered);
+        console.log(secondFiltered);
     }
 }
 
