@@ -1,35 +1,3 @@
-/*Описание
-Разработать проект-калькулятор для подбора наиболее выгодного вклада исходя из его параметров.
-С помощью интерфейса пользователь может задать параметры вклада:
-Начальная сумма (неотрицательное число)
-Сумма ежемесячного пополнения (неотрицательное число)
-Срок вклада (положительное целое число месяцев)
-Валюта вклада (строка ‘RUB’/’USD’)
-После нажатия на кнопку “Подобрать”, пользователь получает наиболее выгодное с точки зрения конечной суммы банковское предложение в формате:
-Название банка, вклад, процент, итоговая сумма по истечении срока.
-Если есть несколько оптимальных банковских продуктов, дающих одинаковую конечную сумму, то информация выводится по каждому из них.
-Если ни одного подходящего варианта не найдено, пользователю выводится “Нет подходящих вариантов”
-Если пользователь ввел некорректное значение, выводится alert с сообщением об ошибке.
-Варианты банковских продуктов даны в таблице.
-
-Мы предполагаем ежемесячную капитализацию по вкладу. Пополнение происходит после начисления процентов. Последнее пополнение по окончании срока не производится. 
-При расчете конечной суммы можно использовать код функции из предыдущего проекта.
-
-Требования к архитектуре
-
-Приложение нужно реализовать с использованием нескольких классов:
-
-Класс Deposit, реализующий свойства и функциональность вклада, который хотел бы открыть клиент. 
-
-Класс BankProduct, реализующий свойства и функциональность банковского предложения по вкладу
-
-Класс Calculator, инициализирующийся массивом продуктов BankProduct и вычисляющий наиболее выгодный вариант.
-
-Класс Application, реализующий обработку нажатия на кнопку, получение введенных данных и отображение результатов.
-
-*/
-
-
 import { deposits } from './data.js';
 
 class Application {
@@ -42,13 +10,24 @@ class Application {
         let monthlyRefill = +document.getElementById('monthly').value;
         let depositTime = +document.getElementById('time').value;
         let depositCurrency = document.getElementById('currency').value;
+        let resultBox=document.getElementById('result');
         let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
 
         clientData.check();
         console.log(clientData);
-
         let calc = new Calculator();
-        calc.getDataFromClient();
+        let result = calc.getDataFromClient();
+        console.log(result);        
+        function drawTable(result){
+            if(result[0]==undefined) {
+                resultBox.innerHTML="<p>Нет подходящих вариантов</p>";
+            }
+            else if(result[0]!= undefined){
+               
+
+            }
+        }
+        drawTable(result);
     }
 
 }
@@ -62,7 +41,7 @@ class Deposit {
     }
     check = () => {
         if (this.initial >= 0 && this.monthly >= 0 && Number.isInteger(+this.time) && this.time > 0 && (this.currency == 'RUB' || this.currency == 'USD')) {
-            //new calculator?
+
             console.log('ok')
         }
         else {
@@ -102,8 +81,6 @@ class Calculator {
         function currencyFilter(depositCurrency, newArray) {
             let currencyArray = [];
             newArray.forEach(element => {
-                //console.log(element.currency);
-                //console.log(depositCurrency);
                 if (element.currency == depositCurrency) {
                     currencyArray.push(element);
                 }
@@ -132,27 +109,52 @@ class Calculator {
         let secondFiltered = canRefill(monthlyRefill, firstFiltered);
         console.log(secondFiltered);
 
-        function minMaxamountFilter(initialSum, array){               
-            let result = array.filter(element => element.sumMin < initialSum);
+        function minMaxAmountFilter(initialSum, array) {
+            let result = array.filter(element => element.sumMin <= initialSum);
             let result2 = [];
             result.forEach(element => {
-                if(element.sumMax==null){
+                if (element.sumMax == null) {
                     result2.push(element);
                 }
-                else if(element.sumMax > initialSum){
+                else if (element.sumMax >= initialSum) {
                     result2.push(element);
                 }
-                
             }
-                )
+            )
             return result2;
         }
 
-        let thirdFiltered = minMaxamountFilter(initialSum, secondFiltered);
-        console.log(thirdFiltered);  
+        let thirdFiltered = minMaxAmountFilter(initialSum, secondFiltered);
+        console.log(thirdFiltered);
+
+        function minMaxTermFilter(depositTime, array) {
+            let result = array.filter(element => element.termMin <= depositTime);
+            return result;
+        }
+
+        let forthFiltered = minMaxTermFilter(depositTime, thirdFiltered);
+        console.log(forthFiltered);
         
+        function bestSuggestion(array, initialSum, depositTime) {            
+            let result =array.map(element => {return {
+                bankName: element.bankName,
+                investName: element.investName,
+                incomeType: element.incomeType,
+                finalSum: Math.trunc(initialSum*(Math.pow((1+element.incomeType/100), depositTime/12)))}       
+            });
+
+            const newArr = [...result];
+            newArr.sort((objectOne, objectTwo) => objectTwo.finalSum - objectOne.finalSum);
+            let maximum=newArr[0];
+            const equalToMaximum = newArr.filter(element => element.finalSum == maximum.finalSum);
+            return equalToMaximum;
+         
+        }
+
+        let finalSuggestion = bestSuggestion(forthFiltered, initialSum, depositTime);
+        return finalSuggestion;
     }
-        
+
 }
 
 let application = new Application();

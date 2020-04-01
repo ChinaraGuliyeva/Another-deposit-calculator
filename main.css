@@ -32,3 +32,22 @@ section {
 input {
     width: 240px;
 }
+
+.head{
+    background-color:#CAE8D5;
+}
+
+table {
+    display: none;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+}
+
+th, td {
+    padding: 10px; 
+}
+
+tr {
+    border: 1px solid darkgreen;
+}
