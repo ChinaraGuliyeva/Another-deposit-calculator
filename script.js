@@ -24,8 +24,10 @@ class Application {
         function drawTable(result) {
             if (result[0] == undefined) {
                 resultBox.innerHTML = "<p>Нет подходящих вариантов</p>";
+                table.style.display = "none";
             }
             if (result[0] != undefined) {
+                resultBox.innerHTML = "";
                 let rows = [];
                 result.forEach(element => rows.push("<tr><td>" + element.bankName + "</td><td>" + element.investName + "</td><td>" +
                     element.incomeType + "</td><td>" + element.finalSum + "</td></tr>"))
