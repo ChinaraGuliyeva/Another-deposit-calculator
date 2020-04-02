@@ -10,36 +10,36 @@ class Application {
         let monthlyRefill = +document.getElementById('monthly').value;
         let depositTime = +document.getElementById('time').value;
         let depositCurrency = document.getElementById('currency').value;
-        let resultBox=document.getElementById('result');
-        let table=document.getElementById('resultTable');
-        let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
+        let resultBox = document.getElementById('result');
+        let table = document.getElementById('resultTable');
 
+        let clientData = new Deposit(initialSum, monthlyRefill, depositTime, depositCurrency);
         clientData.check();
         console.log(clientData);
+
         let calc = new Calculator();
         let result = calc.getDataFromClient();
-        console.log(result);        
-        function drawTable(result){
-            if(result[0]==undefined) {
-                resultBox.innerHTML="<p>Нет подходящих вариантов</p>";
-            }
+        console.log(result);
 
-            if(result[0]!= undefined){
-                let rows = []; 
+        function drawTable(result) {
+            if (result[0] == undefined) {
+                resultBox.innerHTML = "<p>Нет подходящих вариантов</p>";
+            }
+            if (result[0] != undefined) {
+                let rows = [];
                 result.forEach(element => rows.push("<tr><td>" + element.bankName + "</td><td>" + element.investName + "</td><td>" +
-                element.incomeType + "</td><td>" + element.finalSum + "</td></tr>"))
-                table.style.display = "block";   
-                let fullRows = "";             
-                for (let i=0; i<rows.length; i++) {
-                    fullRows+=rows[i];
-                }                
-                table.innerHTML="<tr class='head'><th>Название банка</th><th>Вклад</th><th>Процент</th><th>Итоговая сумма</th></tr>" 
-                + fullRows;s
+                    element.incomeType + "</td><td>" + element.finalSum + "</td></tr>"))
+                table.style.display = "block";
+                let fullRows = "";
+                for (let i = 0; i < rows.length; i++) {
+                    fullRows += rows[i];
+                }
+                table.innerHTML = "<tr class='head'><th>Название банка</th><th>Вклад</th><th>Процент</th><th>Итоговая сумма</th></tr>"
+                    + fullRows;
             }
         }
         drawTable(result);
     }
-
 }
 
 class Deposit {
@@ -51,7 +51,6 @@ class Deposit {
     }
     check = () => {
         if (this.initial >= 0 && this.monthly >= 0 && Number.isInteger(+this.time) && this.time > 0 && (this.currency == 'RUB' || this.currency == 'USD')) {
-
             console.log('ok')
         }
         else {
@@ -68,13 +67,9 @@ class BankProduct {
         this.currency = currency;
     }
     getBankArray = () => {
-        let banks = [];
-        for (let i = 0; i < deposits.length; i++) {
-            banks.push(deposits[i]);
-        }
+        let banks = [...deposits];       
         return banks;
     }
-
 }
 
 class Calculator {
@@ -85,8 +80,7 @@ class Calculator {
         depositCurrency = document.getElementById('currency').value;
 
         let bankProduct = new BankProduct();
-        let newArray = bankProduct.getBankArray().concat();
-        console.log(depositCurrency);
+        let newArray = bankProduct.getBankArray();
 
         function currencyFilter(depositCurrency, newArray) {
             let currencyArray = [];
@@ -94,9 +88,7 @@ class Calculator {
                 if (element.currency == depositCurrency) {
                     currencyArray.push(element);
                 }
-            }
-            );
-            console.log(currencyArray);
+            });            
             return currencyArray;
         }
 
@@ -105,7 +97,6 @@ class Calculator {
 
         function canRefill(monthlyRefill, array) {
             let resultArray = [];
-
             for (let i = 0; i < array.length; i++) {
                 if (monthlyRefill == 0 && array[i].canDeposit == false) {
                     resultArray.push(array[i]);
@@ -144,27 +135,29 @@ class Calculator {
 
         let forthFiltered = minMaxTermFilter(depositTime, thirdFiltered);
         console.log(forthFiltered);
-        
-        function bestSuggestion(array, initialSum, depositTime) {            
-            let result =array.map(element => {return {
-                bankName: element.bankName,
-                investName: element.investName,
-                incomeType: element.incomeType,
-                finalSum: Math.trunc(initialSum*(Math.pow((1+element.incomeType/100), depositTime/12)))}       
+
+        function bestSuggestion(array, initialSum, depositTime) {
+            let result = array.map(element => {
+                return {
+                    bankName: element.bankName,
+                    investName: element.investName,
+                    incomeType: element.incomeType,
+                    finalSum: Math.trunc(initialSum * (Math.pow((1 + element.incomeType / 100), depositTime / 12)))
+                }
             });
 
             const newArr = [...result];
             newArr.sort((objectOne, objectTwo) => objectTwo.finalSum - objectOne.finalSum);
-            let maximum=newArr[0];
+            let maximum = newArr[0];
             const equalToMaximum = newArr.filter(element => element.finalSum == maximum.finalSum);
             return equalToMaximum;
-         
         }
 
         let finalSuggestion = bestSuggestion(forthFiltered, initialSum, depositTime);
         return finalSuggestion;
     }
-
 }
 
 let application = new Application();
+
+
