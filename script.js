@@ -1,5 +1,3 @@
-import { deposits } from './data.js';
-
 class Application {
     constructor() {
         this.button = document.getElementById('button-choose');

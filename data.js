@@ -53,5 +53,3 @@ let deposits = [
     { bankName: "Первый Инвестиционный Банк", investName: "Закон сохранения", currency: "USD", incomeType: 1.5, sumMin: 1000, sumMax: null, termMin: 12, termMax: 12, canDeposit: true },
     { bankName: "Новый Век", investName: "Сберегательный", currency: "USD", incomeType: 1.5, sumMin: 5000, sumMax: 20000, termMin: 12, termMax: 12, canDeposit: true }
     ];
-
-    export {deposits};
